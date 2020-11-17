@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script type="text/javascript" src="cart-tool.js"></script>
+        <script>
+            window.onload=function(){
+                TestCartTool();
+                RenderCartTable(document.getElementById('cart-tables'));
+            }
+        </script>
+        <style>
+            .cart-table{
+                margin:auto;
+                border:1px solid gray;
+            }
+            .cart-table tr{
+                border-bottom: 1px solid black;
+            }
+            .cart-table td,th{
+                padding:5px;
+            }
+            .btn-group{
+                display:flex;
+            }
+            .btn-group button{
+                border: 1px solid #d0d0d0;
+                background-color: rgb(193 193 193);
+                color: white;
+            }
+            .btn-group button:first-child{
+                border-radius: 5px 0 0 5px;
+            }
+            .btn-group button:last-child{
+                border-radius: 0 5px 5px 0;
+            }
+            .btn-red{
+                background-color: red !important;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="cart-tables">
+            <table class="cart-table">
+                <caption>斯貝寵物平台</caption>
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>商品名稱</th>
+                        <th>單價</th>
+                        <th>數量</th>
+                        <th></th>
+                        <th>小計</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>大空間貓砂盆全封閉式貓廁不沾砂喵砂盆貓便盆貓砂屋</td>
+                        <td>$599</td>
+                        <td><input type="number" step="1" min="1" value="1" /></td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" onclick="AddQuantity(this)">+</button>
+                                <button type="button" onclick="LessQuantity(this)">-</button>
+                                <button type="button" class="btn-red">刪除</button>
+                            </div>
+                        </td>
+                        <td>
+                            $599
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>大空間貓砂盆全封閉式貓廁不沾砂喵砂盆貓便盆貓砂屋</td>
+                        <td>$599</td>
+                        <td><input type="number" step="1" min="1" value="1" /></td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button">+</button>
+                                <button type="button">-</button>
+                                <button type="button" class="btn-red">刪除</button>
+                            </div>
+                        </td>
+                        <td>
+                            $599
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
