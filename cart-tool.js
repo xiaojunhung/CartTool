@@ -1,4 +1,6 @@
+let RenderElement = null;
 function RenderCartTable(element){
+    RenderElement = element;
     
 }
 function GetCartStorage(){
@@ -10,16 +12,59 @@ function SetCartStorage(obj){
     localStorage.setItem('CartStorage',jsonString);
 }
 function AddQuantity(element){
-    const input = $(element).parents('tr').find('input[type="number"]');
-    const quantity = parseInt(input.val());
-    input.val(quantity + 1);
+    const CommodityInfo = GetCommodityInfo(element);
+    let quantity = parseInt(CommodityInfo.Quantity);
+    quantity++;
+    $(element).parents('tr').find('input[name="commodity-quantity"]').val(quantity);
+    SetCommodityQuantity(CommodityInfo.CartID,CommodityInfo.CommodityID,quantity);
 }
 function LessQuantity(element){
-    const input = $(element).parents('tr').find('input[type="number"]');
-    const quantity = parseInt(input.val());
-    if(quantity > 1){
-        input.val(quantity - 1);
+    const CommodityInfo = GetCommodityInfo(element);
+    let quantity = parseInt(CommodityInfo.Quantity);
+    quantity--;
+    if(quantity >= 1){
+        $(element).parents('tr').find('input[name="commodity-quantity"]').val(quantity);
+        SetCommodityQuantity(CommodityInfo.CartID,CommodityInfo.CommodityID,quantity);
     }
+}
+function SetCommodityQuantity(CartID,CommodityID,Quantity){
+    let Carts = GetCartStorage();
+    let IsEdit = false;
+    Carts.forEach((Cart)=>{
+        if(Cart.ID == CartID){
+            Cart.Commodities.forEach((Commodity)=>{
+                if(Commodity.ID == CommodityID){
+                    Commodity.Quantity = parseInt(Quantity);
+                    IsEdit = true;
+                }
+            });
+        }
+    });
+    if(IsEdit){
+        SetCartStorage(Carts);
+        CalcTotal();
+    } 
+}
+function GetCommodityInfo(element){
+    return {
+        CartID:$(element).parents('tr').find('input[name="cart-id"]').val(),
+        CommodityID:$(element).parents('tr').find('input[name="commodity-id"]').val(),
+        Quantity:$(element).parents('tr').find('input[name="commodity-quantity"]').val(),
+    }
+}
+function CalcTotal(){
+    let Total=0;
+    let Carts = GetCartStorage();
+    Carts.forEach((Cart,iCart)=>{
+        const CartElement = $(RenderElement).find('table.cart-table')[iCart];
+        Cart.Commodities.forEach((Commodity,iCommodity)=>{
+            const CommodityElement = $(CartElement).find('tbody tr')[iCommodity];
+            const SubTotal = Commodity.Price * Commodity.Quantity;
+            Total+=SubTotal;
+            $(CommodityElement).find('td.sub-total').html('$'+SubTotal);
+        });
+    });
+    $('.cart-layout').find('.total').html('$'+Total);
 }
 function TestCartTool(){
     let Carts=[

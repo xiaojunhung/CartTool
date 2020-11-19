@@ -7,19 +7,33 @@
         <script>
             window.onload=function(){
                 TestCartTool();
-                RenderCartTable(document.getElementById('cart-tables'));
+                RenderCartTable($('#cart-tables'));
             }
         </script>
         <style>
+            .cart-layout{
+                margin:auto;
+                width: 80%;
+            }
+            .total{
+                text-align: right;
+                padding:5px;
+            }
             .cart-table{
+                width: 100%;
                 margin:auto;
                 border:1px solid gray;
-            }
-            .cart-table tr{
-                border-bottom: 1px solid black;
+                border-collapse: collapse;
             }
             .cart-table td,th{
                 padding:5px;
+                border-bottom: 1px solid black;
+            }
+            .cart-table th.sub-total{
+                width:10rem;
+            }
+            .cart-table td.sub-total{
+                text-align: right;
             }
             .btn-group{
                 display:flex;
@@ -43,53 +57,45 @@
     </head>
     <body>
         <div id="cart-tables">
-            <table class="cart-table">
-                <caption>斯貝寵物平台</caption>
-                <thead>
-                    <tr>
-                        <th>No.</th>
-                        <th>商品名稱</th>
-                        <th>單價</th>
-                        <th>數量</th>
-                        <th></th>
-                        <th>小計</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>大空間貓砂盆全封閉式貓廁不沾砂喵砂盆貓便盆貓砂屋</td>
-                        <td>$599</td>
-                        <td><input type="number" step="1" min="1" value="1" /></td>
-                        <td>
-                            <div class="btn-group">
-                                <button type="button" onclick="AddQuantity(this)">+</button>
-                                <button type="button" onclick="LessQuantity(this)">-</button>
-                                <button type="button" class="btn-red">刪除</button>
-                            </div>
-                        </td>
-                        <td>
-                            $599
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>大空間貓砂盆全封閉式貓廁不沾砂喵砂盆貓便盆貓砂屋</td>
-                        <td>$599</td>
-                        <td><input type="number" step="1" min="1" value="1" /></td>
-                        <td>
-                            <div class="btn-group">
-                                <button type="button">+</button>
-                                <button type="button">-</button>
-                                <button type="button" class="btn-red">刪除</button>
-                            </div>
-                        </td>
-                        <td>
-                            $599
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="cart-layout">
+                <table class="cart-table">
+                    <caption>斯貝寵物平台</caption>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>商品名稱</th>
+                            <th>單價</th>
+                            <th>數量</th>
+                            <th></th>
+                            <th class="sub-total">小計</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>大空間貓砂盆全封閉式貓廁不沾砂喵砂盆貓便盆貓砂屋</td>
+                            <td>$599</td>
+                            <td><input type="number" name="commodity-quantity" step="1" min="1" value="10" /></td>
+                            <td>
+                                <input type="hidden" name="cart-id" value="1">
+                                <input type="hidden" name="commodity-id" value="10">
+                                <div class="btn-group">
+                                    <button type="button" onclick="AddQuantity(this)">+</button>
+                                    <button type="button" onclick="LessQuantity(this)">-</button>
+                                    <button type="button" class="btn-red">刪除</button>
+                                </div>
+                            </td>
+                            <td class="sub-total">
+                                $5990
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="total">
+                    <span>$5990</span>
+                </div>
+            </div>
+            
         </div>
     </body>
 </html>
