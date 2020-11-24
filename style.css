@@ -1,0 +1,54 @@
+
+.cart-layout>.cart-table .tr{
+    display: flex;
+}
+.cart-layout>.cart-table .tr>.td,.th{
+    border-bottom: 1px solid;
+    padding:5px 10px;
+}
+.cart-layout>.cart-table .tr>.td.ckb,.th.ckb{
+    flex: 0 0 2rem;
+    text-align: center;
+}
+.cart-layout>.cart-table .tr>.td.number,.th.number{
+    flex: 0 0 4rem;
+    text-align: center;
+}
+.cart-layout>.cart-table .tr>.td.img,.th.img{
+    flex: 0 0 10rem;
+    text-align: center;
+}
+.cart-layout>.cart-table .tr>.td.img > img{
+    width: 100%;
+}
+.cart-layout>.cart-table .tr>.td.name,.th.name{
+    flex: 1 0 auto;
+    text-align: center;
+}
+.cart-layout>.cart-table .tr>.td.price,.th.price{
+    flex: 0 0 10rem;
+    text-align: center;
+}
+.cart-layout>.cart-table .tr>.td.quantity,.th.quantity{
+    flex: 0 0 5rem;
+    text-align: center;
+}
+.cart-layout>.cart-table .tr>.td.quantity>input{
+    width:100%;
+}
+.cart-layout>.cart-table .tr>.td.function,.th.function{
+    flex: 0 0 8rem;
+    text-align: center;
+}
+.cart-layout>.cart-table .tr>.td.sub-total,.th.sub-total{
+    flex: 0 0 3rem;
+    text-align: center;
+}
+.cart-layout>.cart-table>.tfoot .td.title{
+    flex: 1 0 auto;
+    text-align: right;
+}
+.cart-layout>.cart-table>.tfoot .td.cart-total{
+    flex: 0 0 3rem;
+    text-align: center;
+}

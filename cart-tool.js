@@ -1,83 +1,84 @@
 let RenderElement = null;
+let CheckoutButtonElement = null;
 //重新產生畫面
-function RenderTable(Element) {
+function RenderTable(Element, CheckoutButton = null) {
     RenderElement = Element;
+    if (CheckoutButton) CheckoutButtonElement = CheckoutButton;
     let CartTableString = '';
     const Carts = GetCartsStorage();
     CartTableString += '<div class="cart-layout">';
     if (Carts.length > 0) {
         for (let i = 0; i < Carts.length; i++) {
             const Cart = Carts[i];
-            CartTableString += '<table class="cart-table">';
-            CartTableString += '    <caption><input type="checkbox" onchange="SelectCart(this)"/>' + Cart.Name + '</caption>';
-            CartTableString += '    <thead>';
-            CartTableString += '        <tr>';
-            CartTableString += '            <th></th>';
-            CartTableString += '            <th>No.</th>';
-            CartTableString += '            <th></th>';
-            CartTableString += '            <th>商品名稱</th>';
-            CartTableString += '            <th>單價</th>';
-            CartTableString += '            <th>數量</th>';
-            CartTableString += '            <th></th>';
-            CartTableString += '            <th class="cart-total">小計</th>';
-            CartTableString += '        </tr>';
-            CartTableString += '    </thead>';
-            CartTableString += '    <tbody>';
+            CartTableString += '<div class="cart-table">';
+            CartTableString += '    <div class="caption">' + Cart.Name + '</div>';
+            CartTableString += '    <div class="thead">';
+            CartTableString += '        <div class="tr">';
+            CartTableString += '            <div class="th ckb"><label class="select-all-cart"><input type="checkbox" name="select-all" onclick="SelectCart(this)"/></label></div>';
+            CartTableString += '            <div class="th number">No.</div>';
+            CartTableString += '            <div class="th img"></div>';
+            CartTableString += '            <div class="th name">商品名稱</div>';
+            CartTableString += '            <div class="th price">單價</div>';
+            CartTableString += '            <div class="th quantity">數量</div>';
+            CartTableString += '            <div class="th sub-total">小計</div>';
+            CartTableString += '            <div class="th function"></div>';
+            CartTableString += '        </div>';
+            CartTableString += '    </div>';
+            CartTableString += '    <div class="tbody">';
             for (let j = 0; j < Cart.Commodities.length; j++) {
                 const Commodity = Cart.Commodities[j];
+                CartTableString += '        <div class="tr">';
                 if (Commodity.Select) {
-                    CartTableString += '        <tr class="select">';
+                    CartTableString += '            <div class="th ckb"><input type="checkbox" name="commodity-select" onchange="SelectCheckbox(this)" value="" checked/></div>';
                 } else {
-                    CartTableString += '        <tr>';
+                    CartTableString += '            <div class="th ckb"><input type="checkbox" name="commodity-select" onchange="SelectCheckbox(this)"/></div>';
                 }
-                if (Commodity.Select) {
-                    CartTableString += '            <td><input type="checkbox" name="commodity-select" checked/></td>';
-                } else {
-                    CartTableString += '            <td><input type="checkbox" name="commodity-select"/></td>';
-                }
-                CartTableString += '            <td>' + (j + 1) + '</td>';
-                CartTableString += '            <td><img src="images/article-5bd182cf13ebb.jpg"></td>';
-                CartTableString += '            <td>' + Commodity.Name + '</td>';
-                CartTableString += '            <td>$ ' + Commodity.Price + '</td>';
-                CartTableString += '            <td>';
-                CartTableString += '                <input type="number" name="quantity" step="1" min="0" value="' + Commodity.Quantity + '" onchange="SetQuantity(this)" onkeyup="SetQuantity(this)" />';
-                CartTableString += '            </td>';
-                CartTableString += '            <td>';
+                CartTableString += '            <div class="td number">' + (j + 1) + '</div>';
+                CartTableString += '            <div class="td img"><img src="images/article-5bd182cf13ebb.jpg"></div>';
+                CartTableString += '            <div class="td name">' + Commodity.Name + '</div>';
+                CartTableString += '            <div class="td price">$ ' + Commodity.Price + '</div>';
+                CartTableString += '            <div class="td quantity"><button type="button" onclick="AddQuantity(this)">+</button><input type="number" name="quantity" step="1" min="0" value="' + Commodity.Quantity + '" onchange="SetQuantity(this)" onkeyup="SetQuantity(this)"/><button type="button" onclick="LessQuantity(this)">-</button></div>';
+                CartTableString += '            <div class="td sub-total"></div>';
+                CartTableString += '            <div class="td function">';
                 CartTableString += '                <input type="hidden" name="cart-id" value="' + Cart.ID + '" />';
                 CartTableString += '                <input type="hidden" name="commodity-id" value="' + Commodity.ID + '" />';
-                CartTableString += '                <div class="btn-group">';
-                CartTableString += '                    <button type="button" class="btn" onclick="AddQuantity(this)">＋</button>';
-                CartTableString += '                    <button type="button" class="btn" onclick="LessQuantity(this)">－</button>';
-                CartTableString += '                    <button type="button" class="btn btn-red" onclick="DeleteCommodity(this)">刪除</button>';
-                CartTableString += '                </div>';
-                CartTableString += '            </td>';
-                CartTableString += '            <td class="sub-total"></td>';
-                CartTableString += '        </tr>';
+                CartTableString += '                <button type="button" onclick="DeleteCommodity(this)">刪除</button>';
+                CartTableString += '            </div>';
+                CartTableString += '        </div>';
             }
-            CartTableString += '    </tbody>';
-            CartTableString += '    <tfoot>';
-            CartTableString += '        <tr class="cart-total">';
-            CartTableString += '            <td colspan="5">合計</td>';
-            CartTableString += '            <td></td>';
-            CartTableString += '        </tr>';
-            CartTableString += '    </tfoot>';
-            CartTableString += '</table>';
+
+            CartTableString += '    </div>';
+            CartTableString += '    <div class="tfoot">';
+            CartTableString += '        <div class="tr">';
+            CartTableString += '            <div class="td title">合計</div>';
+            CartTableString += '            <div class="td cart-total"></div>';
+            CartTableString += '        </div>';
+            CartTableString += '    </div>';
+            CartTableString += '</div>';
         }
     } else {
         CartTableString += '<h1 class="message">沒有任何商品在購物車！</h1>';
     }
     CartTableString += '<div class="total">';
+    CartTableString += '    <div><label><input type="checkbox" onchange="SelectAllCarts(this)"/>選取所有商品</label></div>';
     CartTableString += '    <div>總計</div>';
     CartTableString += '    <div></div>';
     CartTableString += '</div>';
     CartTableString += '<div>';
     $(RenderElement).html(CartTableString);
     CalcTotal();
-    $('.cart-table caption').click(function (evt) {
-        $(evt.target).next('thead').toggle();
-        $(evt.target).next('thead').next('tbody').toggle();
+    $('.cart-table .caption').click(function (evt) {
+        $(evt.target).next('.thead').toggle();
+        $(evt.target).next('.thead').next('.tbody').toggle();
     });
-    $('.cart-table>tbody>tr').click(SelectCommodity);
+    $('.cart-table>.tbody>.tr').click(SelectCommodity);
+    if (CheckoutButtonElement) {
+        if (CartIsEmpty()) {
+            $(CheckoutButtonElement).hide();
+        } else {
+            $(CheckoutButtonElement).show();
+        }
+    }
 }
 //-----Events-----
 //增加數量
@@ -100,18 +101,19 @@ function LessQuantity(element) {
 }
 //選擇商品
 function SelectCommodity(evt) {
-    if (evt.target.tagName != 'TD' && evt.target.tagName != 'TR' && evt.target.tagName != 'DIV') {
-        return;
-    }
-    let CommodityInfo = GetCommodityInfo(evt.target);
-    if (CommodityInfo.Select == true) {
-        CommodityInfo.SelectElement.prop('checked', false);
-        CommodityInfo.TrElement.removeClass('select');
-        UpdateCartStorageSelect(CommodityInfo.CartID, CommodityInfo.CommodityID, false);
-    } else {
-        CommodityInfo.SelectElement.prop('checked', true);
-        CommodityInfo.TrElement.addClass('select');
-        UpdateCartStorageSelect(CommodityInfo.CartID, CommodityInfo.CommodityID, true);
+    if (evt.target.tagName == 'DIV'
+        || evt.target.tagName == 'IMG') {
+        let CommodityInfo = GetCommodityInfo(evt.target);
+        $(evt.target).parents('.cart-table').find('[name="select-all"]').prop('checked', false);
+        if (CommodityInfo.Select == true) {
+            CommodityInfo.SelectElement.prop('checked', false);
+            CommodityInfo.TrElement.removeClass('select');
+            UpdateCartStorageSelect(CommodityInfo.CartID, CommodityInfo.CommodityID, false);
+        } else {
+            CommodityInfo.SelectElement.prop('checked', true);
+            CommodityInfo.TrElement.addClass('select');
+            UpdateCartStorageSelect(CommodityInfo.CartID, CommodityInfo.CommodityID, true);
+        }
     }
 }
 //設定數量
@@ -132,7 +134,7 @@ function DeleteCommodity(element) {
     RenderTable(RenderElement);
 }
 //放入商品到購物車
-function PutCart(CartID, CartName, CommodityID, CommodityName, Price,Quantity = 1) {
+function PutCart(CartID, CartName, CommodityID, CommodityName, Price, Quantity = 1) {
     if (!CartID || !CartName || !CommodityID || !CommodityName) {
         alert('無法放入購物車');
         return;
@@ -140,7 +142,7 @@ function PutCart(CartID, CartName, CommodityID, CommodityName, Price,Quantity = 
     const IsExist = CommodityIsExist(CartID, CommodityID);
     if (IsExist) {
         alert('無法放入購物車，商品已放入購物車');
-        return 
+        return
     }
     let Carts = GetCartsStorage();
     let IsEdit = false;
@@ -171,9 +173,11 @@ function PutCart(CartID, CartName, CommodityID, CommodityName, Price,Quantity = 
             Select: false
         }
         Cart.Commodities.push(Commodity);
+        IsEdit = true;
     }
     if (IsEdit) {
         SetCartsStorage(Carts);
+        alert('已放入購物車');
         if (RenderElement) {
             RenderTable(RenderElement);
         }
@@ -182,29 +186,79 @@ function PutCart(CartID, CartName, CommodityID, CommodityName, Price,Quantity = 
 //購物車全選
 function SelectCart(element) {
     let Carts = GetCartsStorage();
-    let CartElement = $(element).parents('table.cart-table');
+    const IsChecked = $(element).prop('checked');
+    let CartElement = $(element).parents('.cart-table');
     const CartId = $(CartElement).find('input[name="cart-id"]').val();
     let findCarts = Carts.filter((Cart) => Cart.ID == CartId);
     if (findCarts.length) {
         let Cart = findCarts[0];
         Cart.Commodities.forEach((Commodity, iCommodity) => {
-            let TrTag = $($(CartElement).find('tbody>tr')[iCommodity]);
-            $(TrTag).addClass('select');
-            $(TrTag).find('input[name="commodity-select"]').prop('checked', true);
-            Commodity.Select = true;
+            let TrTag = $($(CartElement).find('.tbody>.tr')[iCommodity]);
+            if (IsChecked) {
+                $(TrTag).addClass('select');
+                $(TrTag).find('input[name="commodity-select"]').prop('checked', true);
+                Commodity.Select = true;
+            } else {
+                $(TrTag).removeClass('select');
+                $(TrTag).find('input[name="commodity-select"]').prop('checked', false);
+                Commodity.Select = false;
+            }
+
         });
         SetCartsStorage(Carts);
     }
 }
+//選擇核取方塊
+function SelectCheckbox(element){
+    let IsChecked = $(element).prop('checked');
+    let CommodityInfo = GetCommodityInfo(element);
+        $(element).parents('.cart-table').find('[name="select-all"]').prop('checked', false);
+        if (IsChecked) {
+            CommodityInfo.TrElement.addClass('select');
+            UpdateCartStorageSelect(CommodityInfo.CartID, CommodityInfo.CommodityID, true);
+        } else {
+            CommodityInfo.TrElement.removeClass('select');
+            UpdateCartStorageSelect(CommodityInfo.CartID, CommodityInfo.CommodityID, false);
+        }
+}
+//選擇所有購物車的商品
+function SelectAllCarts(element){
+    let IsChecked = $(element).prop('checked');
+    $('.cart-layout .cart-table').each(function(){
+        let CartElement = this;
+        $(CartElement).find('[name="select-all"]').prop('checked',IsChecked);
+        $(CartElement).find('.tbody>.tr').each(function(){
+            let TrTag = this;
+            let CommodityInfo = GetCommodityInfo(TrTag);
+            if(IsChecked){
+                $(TrTag).addClass('select');
+                $(TrTag).find('input[name="commodity-select"]').prop('checked', true);
+                UpdateCartStorageSelect(CommodityInfo.CartID, CommodityInfo.CommodityID, true);
+            }else{
+                $(TrTag).removeClass('select');
+                $(TrTag).find('input[name="commodity-select"]').prop('checked', false);
+                UpdateCartStorageSelect(CommodityInfo.CartID, CommodityInfo.CommodityID, false);
+            }
+        });
+    });
+}
 //-----/Events-----
 //-----Methods-----
+function CartIsEmpty() {
+    let Carts = GetCartsStorage();
+    if (Carts.length) {
+        return false;
+    } else {
+        return true;
+    }
+}
 //取得目前商品
 function GetCommodityInfo(element) {
     let tagTr = null;
-    if (element.tagName == 'TR') {
+    if ($(element).hasClass('tr')) {
         tagTr = element;
     } else {
-        tagTr = $(element).parents('tr');
+        tagTr = $(element).parents('.tr');
     }
     let Commodity = GetCommodityStorage($(tagTr).find('input[name="cart-id"]').val(), $(tagTr).find('input[name="commodity-id"]').val());
     return {
@@ -254,7 +308,7 @@ function SetCartsStorage(obj) {
     }
 }
 //更新購物車數量資料
-function UpdateCartStorageQuantity(CartId, CommodityId,Quantity) {
+function UpdateCartStorageQuantity(CartId, CommodityId, Quantity) {
     let CommodityObj = {
         Quantity: Quantity
     }
@@ -289,7 +343,7 @@ function UpdateCartStorage(CartId, CommodityId, obj) {
 //刪除商品資料
 function DeleteCommodityStorage(CartId, CommodityId) {
     let Carts = GetCartsStorage();
-    Carts.forEach((Cart,iCart) => {
+    Carts.forEach((Cart, iCart) => {
         if (Cart.ID == CartId) {
             Cart.Commodities.forEach((Commodity, iCommodity) => {
                 if (Commodity.ID == CommodityId) {
@@ -310,20 +364,16 @@ function CalcTotal() {
     let CartTotal = 0;
     let SubTotal = 0;
     Carts.forEach((Cart, iCart) => {
-        const CartElement = $(RenderElement).find('table.cart-table')[iCart];
+        const CartElement = $(RenderElement).find('div.cart-table')[iCart];
         CartTotal = 0;
         Cart.Commodities.forEach((Commodity, iCommodity) => {
-            const CommodityElement = $(CartElement).find('tbody>tr')[iCommodity];
-            if (Commodity.Select) {
-                SubTotal = Commodity.Price * Commodity.Quantity;
-            } else {
-                SubTotal = 0;
-            }
+            const CommodityElement = $(CartElement).find('.tbody>.tr')[iCommodity];
+            SubTotal = Commodity.Price * Commodity.Quantity;
             CartTotal += SubTotal;
-            $(CommodityElement).children('td.sub-total').html('$ ' + parseInt(SubTotal));
+            $(CommodityElement).children('.td.sub-total').html('$ ' + parseInt(SubTotal));
         });
         Total += CartTotal;
-        $($(CartElement).find('tfoot>tr.cart-total>td')[1]).html('$ ' + parseInt(CartTotal));
+        $($(CartElement).find('.tfoot>.tr>.td')[1]).html('$ ' + parseInt(CartTotal));
     });
     $($(RenderElement).find('div.total>div')[1]).html('$ ' + parseInt(Total));
 }
@@ -331,7 +381,7 @@ function CalcTotal() {
 function toCurrency(num) {
     var parts = num.toString().split('.');
     parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return '$ '+parts.join('.');
+    return '$ ' + parts.join('.');
 }
 //確認商品是否已經在購物車內
 function CommodityIsExist(CartID, CommodityID) {
@@ -363,7 +413,7 @@ function SetTestData() {
                     Name: 'Nutram紐頓 - T22無穀挑嘴全齡貓(火雞+雞肉)',
                     Price: 599,
                     Quantity: 10,
-                    Select:false
+                    Select: false
                 },
                 {
                     ID: 11,
