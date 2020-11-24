@@ -1,7 +1,8 @@
 let RenderElement = null;
 let CheckoutButtonElement = null;
+let CartTool = {};//用變數把Function輸出(雖然不用這樣也可以，但是這樣比較明確)
 //重新產生畫面
-function RenderTable(Element, CheckoutButton = null) {
+CartTool.RenderTable = function (Element, CheckoutButton = null) {
     RenderElement = Element;
     if (CheckoutButton) CheckoutButtonElement = CheckoutButton;
     let CartTableString = '';
@@ -80,7 +81,7 @@ function RenderTable(Element, CheckoutButton = null) {
         }
     }
 }
-//-----Events-----
+//#region Events
 //增加數量
 function AddQuantity(element) {
     const CommodityInfo = GetCommodityInfo(element);
@@ -131,18 +132,24 @@ function DeleteCommodity(element) {
     const CommodityIfo = GetCommodityInfo(element);
     let confirmResult = confirm('商品:' + CommodityIfo.CommodityName + '\r\n數量:' + CommodityIfo.Quantity + '\r\n確定要刪除這筆商品？');
     if (confirmResult) DeleteCommodityStorage(CommodityIfo.CartID, CommodityIfo.CommodityID);
-    RenderTable(RenderElement);
+    CartTool.RenderTable(RenderElement);
 }
 //放入商品到購物車
-function PutCart(CartID, CartName, CommodityID, CommodityName, Price, Quantity = 1) {
+CartTool.PutCart = function (CartID, CartName, CommodityID, CommodityName, Price, Quantity = 1) {
+    let Result={
+        Status:false,
+        Message:''
+    };
     if (!CartID || !CartName || !CommodityID || !CommodityName) {
-        alert('無法放入購物車');
-        return;
+        Result.Status = false;
+        Result.Message = '無法放入購物車';
+        return Result;
     }
     const IsExist = CommodityIsExist(CartID, CommodityID);
     if (IsExist) {
-        alert('無法放入購物車，商品已放入購物車');
-        return
+        Result.Status = false;
+        Result.Message = '無法放入購物車，商品已放入購物車';
+        return Result;
     }
     let Carts = GetCartsStorage();
     let IsEdit = false;
@@ -177,11 +184,13 @@ function PutCart(CartID, CartName, CommodityID, CommodityName, Price, Quantity =
     }
     if (IsEdit) {
         SetCartsStorage(Carts);
-        alert('已放入購物車');
+        Result.Status = true;
+        Result.Message = '已放入購物車';
         if (RenderElement) {
-            RenderTable(RenderElement);
+            CartTool.RenderTable(RenderElement);
         }
     }
+    return Result;
 }
 //購物車全選
 function SelectCart(element) {
@@ -242,8 +251,8 @@ function SelectAllCarts(element){
         });
     });
 }
-//-----/Events-----
-//-----Methods-----
+//#endregion
+//#region Methods
 function CartIsEmpty() {
     let Carts = GetCartsStorage();
     if (Carts.length) {
@@ -400,9 +409,9 @@ function CommodityIsExist(CartID, CommodityID) {
         }
     }
 }
-//-----/Methods-----
-//測試用，不用把它拿掉
-function SetTestData() {
+//#endregion Methods
+//#region 測試用，不用把它拿掉
+CartTool.SetTestData = function() {
     let Carts = [
         {
             ID: 1,
@@ -440,3 +449,4 @@ function SetTestData() {
     ];
     SetCartsStorage(Carts);
 }
+//#endregion

@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <button type="button" onclick="PutCart(1,'斯貝寵物商店',12,'寵物電毯(大)',750,12)">加入測試商品</button>
+    <button type="button" onclick="onClickPutCart()">加入測試商品</button>
     <div id="cart-div-table">
         <div class="cart-layout">
             <div class="cart-table">
@@ -119,9 +119,17 @@
     <a href="#" class="btn left">結帳</a>
     <script>
         $(function () {
-            SetTestData();
-            RenderTable($('#cart-div-table'));
+            CartTool.SetTestData();
+            CartTool.RenderTable($('#cart-div-table'));
         });
+        function onClickPutCart(){
+            let Result = CartTool.PutCart(1,'斯貝寵物商店',12,'寵物電毯(大)',750,12);
+            if(Result.Status){
+                alert(Result.Message);
+            }else{
+                alert(Result.Message);
+            }
+        }
     </script>
 </body>
 
